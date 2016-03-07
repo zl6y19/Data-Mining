@@ -26,22 +26,18 @@ def getWordsTF(file_name):
         print "Start reading file..."
         soul = BeautifulSoup(wp, "html.parser")
         content_original = ''
-
-
         for i in soul.find_all('span', class_ = "ocr_cinfo"):
             #Lemmatization
-
             content_original = content_original + ' ' + lemma(i.text)
 
-
+        # remove all non-alpha characters and convert to lowercase
         content = preprocessWords(content_original)
+        # remove stopwords
         content = removestopword(content)
+        # remove short words
         content = removeshort(content)
-
+        # correct the misspelling words
         content = correctword(content)
-
-
-
         # repeat remove stop word and short word
 
 
@@ -75,10 +71,14 @@ def correctword(words):
     # check the word by the build-in Dic
     rightwords = ''
     for word in words:
-        if d.check(word) == true:
+        if d.check(word) == 'True':
             rightwords = rightwords + ' ' + word
         else:
-            rightwords = rightwords + ' ' + d.suggest(word)
+            suggestion = d.suggest(word)
+            if suggestion != '':
+                rightwords = rightwords + ' ' + suggestion[0]
+            else:
+                rightwords = rightwords + ' ' + word
     return rightwords
     # if true : add to string else check the suggestion
 
