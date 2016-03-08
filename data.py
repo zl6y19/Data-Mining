@@ -11,6 +11,9 @@ from pattern.en import lemma
 from nltk.corpus import stopwords
 import nltk
 import enchant
+from sklearn import feature_extraction
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer
 
 
 
@@ -51,10 +54,6 @@ def getWords(i,folds_name):
         # try to use TF-IDF to do it
         #content = correctword(content)
         #print content
-
-
-
-
 
 def preprocessWords(words):
 
@@ -97,12 +96,11 @@ def correctword(words):
     return rightwords
     # if true : add to string else check the suggestion
 
-def Tfidf(filelist) :
-    path = './segfile／'
+def Tfidf(filelist):
+
     corpus = []  #存取100份文档的分词结果
-    for ff in filelist :
-        fname = path + ff
-        f = open(fname,'r+')
+    for ff in glob.glob(os.path.join(filelist, "*.txt")):
+        f = open(ff,'r+')
         content = f.read()
         f.close()
         corpus.append(content)
@@ -114,7 +112,7 @@ def Tfidf(filelist) :
     word = vectorizer.get_feature_names() #所有文本的关键字
     weight = tfidf.toarray()              #对应的tfidf矩阵
 
-    sFilePath = './tfidffile'
+    sFilePath = '/Users/lxy/GitHub/Data-Mining/'
     if not os.path.exists(sFilePath) :
         os.mkdir(sFilePath)
 
@@ -126,20 +124,24 @@ def Tfidf(filelist) :
             f.write(word[j]+"    "+str(weight[i][j])+"\n")
         f.close()
 
+    return 1
+
 
 if __name__ == "__main__" :
     file_path = r"/Users/lxy/Desktop/gap-html/"
     i = 0
+    text_path = r"/Users/lxy/GitHub/Data-Mining/"
 
+    #for folds_name in glob.glob(os.path.join(file_path, "*")):
+     #   i = i + 1
+      #  k = str(i)
+       # finalword = getWords(i,folds_name)
+        #if finalword == '1':
+         #   print "finish write fold" + k
 
-    for folds_name in glob.glob(os.path.join(file_path, "*")):
-        i = i + 1
-        k = str(i)
-        finalword = getWords(i,folds_name)
-        if finalword == '1':
-            print "finish write fold" + k
-
-    
+    final_TF = Tfidf(text_path)
+    if final_TF == '1':
+        print "Success TF-IDF"
 
 
 
