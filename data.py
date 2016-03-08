@@ -17,8 +17,12 @@ import enchant
 nltk.download("stopwords")
 # 遍历指定目录，显示目录下的所有文件名
 
-def getWordsTF(file_name):
-    input_path = eval(r"file_name")
+def getWords(i,folds_name):
+    input_path = eval(r"folds_name")
+    content = ''
+    j = str(i)
+    files_out = "text" + j
+    out = file(files_out + '.txt', 'w')
     for files in glob.glob(os.path.join(input_path, "*.html")):
         fileDir = (files)
         print "file path:" + fileDir
@@ -29,23 +33,25 @@ def getWordsTF(file_name):
         for i in soul.find_all('span', class_ = "ocr_cinfo"):
             #Lemmatization
             content_original = content_original + ',' + lemma(i.text)
-
-
         # remove all non-alpha characters and convert to lowercase
         content = preprocessWords(content_original)
-
         # remove stopwords
         content = removestopword(content)
-
         # remove short words
         content = removeshort(content)
+
+        for word in content:
+            out.write('\t%s' % word)
+        #out.write('\n')
         print content
+    out.close()
+    return 1
 
-
-
-
+        # correct wrong spelling problem , act not well
+        # try to use TF-IDF to do it
+        #content = correctword(content)
         #print content
-    return content
+
 
 
 
@@ -73,20 +79,22 @@ def removeshort(words):
     # remove short word
     return [word for word in words if len(word) > 3]
 
-#def correctword(words):
-    #d = enchant.Dict("en_GB")
+def correctword(words):
+    d = enchant.Dict("en_US")
     # check the word by the build-in Dic
     rightwords = ''
 
-    #for word in words:
-        #print d.check(word)
-        #if d.check(word) == True:
-            #rightwords = rightwords + ' ' + word
-        #else:
+    for word in words:
+        print d.check(word)
+        if d.check(word) == True:
+            rightwords = rightwords + ' ' + word
+            print word
+        else:
+            print word
             #suggestion = d.suggest(word)
             #print suggestion
             #rightwords = rightwords + ' ' + suggestion[0]
-    #return rightwords
+    return rightwords
     # if true : add to string else check the suggestion
 
 def Tfidf(filelist) :
@@ -121,8 +129,18 @@ def Tfidf(filelist) :
 
 if __name__ == "__main__" :
     file_path = r"/Users/lxy/Desktop/gap-html/"
-    for file_name in glob.glob(os.path.join(file_path, "*")):
-        finalword = getWordsTF(file_name)
-        print finalword
+    i = 0
+
+
+    for folds_name in glob.glob(os.path.join(file_path, "*")):
+        i = i + 1
+        k = str(i)
+        finalword = getWords(i,folds_name)
+        if finalword == '1':
+            print "finish write fold" + k
+
+    
+
+
 
 
