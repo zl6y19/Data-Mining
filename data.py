@@ -24,6 +24,7 @@ import codecs
 from sklearn.cluster import AgglomerativeClustering
 import csv
 
+nltk.download("stopwords")
 
 # Read files and call functions
 def getWords(i,folds_name):
@@ -193,8 +194,10 @@ def k_means(weight):
 
 
 if __name__ == "__main__" :
+    # original root file path
     file_path = r"/Users/lxy/Desktop/gap-html/"
     i = 0
+    # input text path for TF-IDF
     text_path = r"/Users/lxy/GitHub/Data-Mining/"
     #print enchant.list_languages()
 
