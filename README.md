@@ -1,2 +1,2 @@
 # Data-Mining
-Group Work for COMP6237: Data Mining
+Indivisual Work for COMP6237: Data Mining
